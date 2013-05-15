@@ -1,26 +1,50 @@
-<?php class WordGenerator {
-    private $punct_any = Array(",", ",", ",", ",", ",", ",", " -", "?", "!", "?!");
-    private $punct_end = Array(".", ".", ".", ".", ".", ".", "...", "?", "!", "?!");
+<?php
+
+/*
+ * @author		Levan Velijanashvili <stichoza@gmail.com>
+ * @version		1.0
+ *
+ */
+
+class WordGenerator {
+
+    private $punct_any = Array(",", ",", ",", ",", ",", ",", " -");
+    private $punct_end = Array(".", ".", ".", ".", ".", ".", ".", ".", ".", ".", ".", ".", ".", ".", "...", "?", "!", "?!");
     private $vowels = Array("ა", "ე", "ი", "ო", "უ");
-    private $meore = Array("ბ", "გ", "დ", "ვ", "ზ", "თ",
+    private $consonants = Array("ბ", "გ", "დ", "ვ", "ზ", "თ",
         "კ", "ლ", "მ", "ნ", "პ", "ჟ", "რ", "ს", "ტ", "ფ", "ქ",
         "ღ", "ყ", "შ", "ჩ", "ც", "ძ", "წ", "ჭ", "ხ", "ჯ", "ჰ");
-    private $endings = Array("მა", "ით", "ქნა", "ები", "ოვა");
-    private $prefixes = Array("გადა", "ჩა", "მიმო", "წა", "შე", "გაა");
-    public function generateWord($length, $strict = false) {
+    private $prefixes = Array("მი", "მო", "მიმო", "და", "ჩა", "შე", "გა", "გადმო", "წა");
+    private $suffixes = Array("მა", "ით", "ქნა", "ები", "ოვა", "-მეთქი", "-თქო");
+
+    /*
+     * @param int
+     * @param boolean
+     * @param boolean
+     * @param boolean
+     */
+    public function generateWord($length, $pre = true, $suf = true, $strict = false) {
+        $word = "";
         $offset = ($strict) ? 0 : rand(0, 1);
         if (($offset && $length%2!=0) || (!$offset && $length%2==0)) $length++;
         for ($i=0; $i<$length; $i++) {
-            $letters = (($i+$offset)%2 == 0) ? $this->vowels : $this->meore;
+            $letters = (($i+$offset)%2 == 0) ? $this->vowels : $this->consonants;
             $word .= $letters[rand(0, count($letters)-1)];
         }
-        if (!rand(0, 4)) $word .= $this->endings[rand(0, count($this->endings)-1)];
-        if (!rand(0, 4)) $word = $this->prefixes[rand(0, count($this->prefixes)-1)] . $word;
+        if (!rand(0, 4) && $suf) $word .= $this->suffixes[rand(0, count($this->suffixes)-1)];
+        if (!rand(0, 4) && $pre) $word = $this->prefixes[rand(0, count($this->prefixes)-1)] . $word;
         return $word;
     }
-    public function generateSentence($n) {
+
+    /*
+     * @param int
+     * @param boolean
+     * @param boolean
+     */
+    public function generateSentence($n, $pre, $suf) {
+        $sentence = "";
         for ($i=0; $i<$n; $i++) {
-            $sentence .= $this->generateWord(rand(3, 8));
+            $sentence .= $this->generateWord(rand(3, 8), $pre, $suf);
             if ($i == $n-1) {
                 $sentence .= $this->punct_end[rand(0, count($this->punct_end)-1)];
                 break;
@@ -31,5 +55,6 @@
         }
         return $sentence;
     }
+
 }
 ?>
