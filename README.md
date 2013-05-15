@@ -1,4 +1,4 @@
-geo-word-generator
+word-generator
 ==================
 
 Generate Georgian words and sentences wisely
