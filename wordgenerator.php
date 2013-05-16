@@ -69,7 +69,7 @@ class WordGenerator {
 	);
 
 	/*
-	 * @param int
+	 * @param null
 	 *
 	 */
 	public function __construct() {
@@ -142,11 +142,16 @@ class WordGenerator {
 		$offset = ($strict) ? 0 : rand(0, 1);
 		if (($offset && $length%2!=0) || (!$offset && $length%2==0)) $length++;
 		for ($i=0; $i<$length; $i++) {
-			$letters = (($i+$offset)%2 == 0) ? $this->preparedData["letters"]["vowels"] : $this->preparedData["letters"]["consonants"];
+			$letters = (($i+$offset)%2 == 0) ? $this->preparedData["letters"]["vowels"]
+				: $this->preparedData["letters"]["consonants"];
 			$word .= $letters[rand(0, count($letters)-1)];
 		}
-		if (!rand(0, 4) && $suf) $word .= $this->preparedData["groups"]["suffixes"][rand(0, count($this->preparedData["groups"]["suffixes"])-1)];
-		if (!rand(0, 4) && $pre) $word = $this->preparedData["groups"]["prefixes"][rand(0, count($this->preparedData["groups"]["prefixes"])-1)] . $word;
+		if (!rand(0, 4) && $suf)
+			$word .= $this->preparedData["groups"]["suffixes"][rand(0,
+				count($this->preparedData["groups"]["suffixes"])-1)];
+		if (!rand(0, 4) && $pre)
+			$word = $this->preparedData["groups"]["prefixes"][rand(0,
+				count($this->preparedData["groups"]["prefixes"])-1)] . $word;
 		return $word;
 	}
 
@@ -160,10 +165,12 @@ class WordGenerator {
 		for ($i=0; $i<$n; $i++) {
 			$sentence .= $this->generateWord(rand(3, 8), $pre, $suf);
 			if ($i == $n-1) {
-				$sentence .= $this->preparedData["punctuation"]["ending"][rand(0, count($this->preparedData["punctuation"]["ending"])-1)];
+				$sentence .= $this->preparedData["punctuation"]["ending"][rand(0,
+					count($this->preparedData["punctuation"]["ending"])-1)];
 				break;
 			} elseif (!rand(0,4)) {
-				$sentence .= $this->preparedData["punctuation"]["middle"][rand(0, count($this->preparedData["punctuation"]["middle"])-1)];
+				$sentence .= $this->preparedData["punctuation"]["middle"][rand(0,
+					count($this->preparedData["punctuation"]["middle"])-1)];
 			}
 			$sentence .= " ";
 		}
