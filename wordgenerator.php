@@ -78,6 +78,7 @@ class WordGenerator {
 		} catch (Exception $e) {
 			echo "Caught Exception: " . $e.getMessage();
 		}
+		unset($this->characterBase);
 	}
 
 	/*
