@@ -2,12 +2,17 @@
 
 /*
  * @author	Levan Velijanashvili <stichoza@gmail.com>
- * @version	2.0.0
+ * @version	2.1.15
  *
  */
 
 class WordGenerator {
 
+	private $probability = array(
+		"punctuation" => 5,
+		"prefixes" => 4,
+		"suffixes" => 4,
+	);
 	private $preparedData = array();
 	private $characterBase = array(
 		"punctuation" => array(
@@ -146,10 +151,10 @@ class WordGenerator {
 				: $this->preparedData["letters"]["consonants"];
 			$word .= $letters[rand(0, count($letters)-1)];
 		}
-		if (!rand(0, 4) && $suf)
+		if (!rand(0, $this->probability["suffixes"]) && $suf)
 			$word .= $this->preparedData["groups"]["suffixes"][rand(0,
 				count($this->preparedData["groups"]["suffixes"])-1)];
-		if (!rand(0, 4) && $pre)
+		if (!rand(0, $this->probability["prefixes"]) && $pre)
 			$word = $this->preparedData["groups"]["prefixes"][rand(0,
 				count($this->preparedData["groups"]["prefixes"])-1)] . $word;
 		return $word;
@@ -168,7 +173,7 @@ class WordGenerator {
 				$sentence .= $this->preparedData["punctuation"]["ending"][rand(0,
 					count($this->preparedData["punctuation"]["ending"])-1)];
 				break;
-			} elseif (!rand(0,4)) {
+			} elseif (!rand(0, $this->probability["punctuation"])) {
 				$sentence .= $this->preparedData["punctuation"]["middle"][rand(0,
 					count($this->preparedData["punctuation"]["middle"])-1)];
 			}
