@@ -2,7 +2,7 @@
 
 /*
  * @author	Levan Velijanashvili <stichoza@gmail.com>
- * @version	1.0
+ * @version	2.0.0
  *
  */
 
@@ -80,10 +80,11 @@ class WordGenerator {
 	 *
 	 */
 	public function __construct() {
-		//header("content-type: text/plain");
-		$this->prepareData($this->characterBase);
-		print_r($this->preparedData);
-		die();
+		try {
+			$this->prepareData($this->characterBase);
+		} catch (Exception $e) {
+			echo "Caught Exception: " . $e.getMessage();
+		}
 	}
 
 	/*
@@ -107,6 +108,8 @@ class WordGenerator {
 						echo "Exception in inner loop: " . $e.getMessage();
 					}
 				}
+			} else {
+				throw new Exception('Expected array.');
 			}
 		}
 	}
@@ -145,11 +148,11 @@ class WordGenerator {
 		$offset = ($strict) ? 0 : rand(0, 1);
 		if (($offset && $length%2!=0) || (!$offset && $length%2==0)) $length++;
 		for ($i=0; $i<$length; $i++) {
-			$letters = (($i+$offset)%2 == 0) ? $this->vowels : $this->consonants;
+			$letters = (($i+$offset)%2 == 0) ? $this->preparedData["letters"]["vowels"] : $this->preparedData["letters"]["consonants"];
 			$word .= $letters[rand(0, count($letters)-1)];
 		}
-		if (!rand(0, 4) && $suf) $word .= $this->suffixes[rand(0, count($this->suffixes)-1)];
-		if (!rand(0, 4) && $pre) $word = $this->prefixes[rand(0, count($this->prefixes)-1)] . $word;
+		if (!rand(0, 4) && $suf) $word .= $this->preparedData["groups"]["suffixes"][rand(0, count($this->preparedData["groups"]["suffixes"])-1)];
+		if (!rand(0, 4) && $pre) $word = $this->preparedData["groups"]["prefixes"][rand(0, count($this->preparedData["groups"]["prefixes"])-1)] . $word;
 		return $word;
 	}
 
@@ -163,10 +166,10 @@ class WordGenerator {
 		for ($i=0; $i<$n; $i++) {
 			$sentence .= $this->generateWord(rand(3, 8), $pre, $suf);
 			if ($i == $n-1) {
-				$sentence .= $this->punct_end[rand(0, count($this->punct_end)-1)];
+				$sentence .= $this->preparedData["punctuation"]["ending"][rand(0, count($this->preparedData["punctuation"]["ending"])-1)];
 				break;
 			} elseif (!rand(0,4)) {
-				$sentence .= $this->punct_any[rand(0, count($this->punct_any)-1)];
+				$sentence .= $this->preparedData["punctuation"]["middle"][rand(0, count($this->preparedData["punctuation"]["middle"])-1)];
 			}
 			$sentence .= " ";
 		}
