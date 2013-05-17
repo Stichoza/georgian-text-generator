@@ -147,7 +147,9 @@ class WordGenerator {
 		$offset = ($strict) ? 0 : rand(0, 1);
 		if (($offset && $length%2!=0) || (!$offset && $length%2==0)) $length++;
 		for ($i=0; $i<$length; $i++) {
-			$letters = (($i+$offset)%2 == 0) ? $this->preparedData["letters"]["vowels"]
+			$isVowel = (($i+$offset)%2 == 0);
+			if ($isVowel && !rand(0, 5) && !$strict) continue;
+			$letters = $isVowel ? $this->preparedData["letters"]["vowels"]
 				: $this->preparedData["letters"]["consonants"];
 			$word .= $letters[rand(0, count($letters)-1)];
 		}
