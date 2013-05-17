@@ -6,25 +6,42 @@
  *
  */
 
-class WordGenerator {
+class TextGenerator {
 
+	/*
+	 *	Probability of certain functionalities
+	 *	Large number = less probability
+	 *	n	- 1/n+1
+	 *	0	- 1
+	 *	1	- 1/2
+	 *	inf	- 1/inf
+	 */
 	private $probability = array(
 		"punctuation" =>	5,
 		"prefixes" =>		4,
-		"suffixes" =>		4,
+		"suffixes" =>		6,
 	);
+
+	/*
+	 *	Array of processed chars
+	 */
 	private $preparedData = array();
+
+	/*
+	 *	Basic array of characters
+	 *	This array is deleted at the end of construction
+	 */
 	private $characterBase = array(
 		"punctuation" => array(
 			"middle" => array(
-				"," =>	5,
+				"," =>	8,
 				" -" =>	1
 			),
 			"ending" => array(
-				"." =>	20,
-				"..." =>2,
-				"?" =>	1,
-				"!" =>	1,
+				"." =>	25,
+				"..." =>3,
+				"?" =>	2,
+				"!" =>	2,
 				"?!" =>	1
 			)
 		),
@@ -51,22 +68,22 @@ class WordGenerator {
 		),
 		"groups" => array(
 			"prefixes" => array(
-				"მი" =>		1,
-				"მო" =>		1,
+				"მი" =>		3,
+				"მო" =>		3,
 				"მიმო" =>	1,
-				"და" =>		1,
-				"ჩა" =>		1,
-				"შე" =>		1,
-				"გა" =>		1,
+				"და" =>		4,
+				"ჩა" =>		4,
+				"შე" =>		6,
+				"გა" =>		4,
 				"გადმო" =>	1,
-				"წა" =>		1
+				"წა" =>		3
 			),
 			"suffixes" => array(
-				"მა" =>		1,
-				"ით" =>		1,
+				"მა" =>		5,
+				"ით" =>		6,
 				"ქნა" =>		1,
-				"ები" =>		1,
-				"ოვა" =>		1,
+				"ები" =>		10,
+				"ოვა" =>		3,
 				"-მეთქი" =>	1,
 				"-თქო" =>	1
 			)
@@ -93,7 +110,7 @@ class WordGenerator {
 	 */
 	private function prepareData($array) {
 		foreach ($array as $key => $value) {
-			if (is_array($value) && !WordGenerator::has_array($value)) {
+			if (is_array($value) && !TextGenerator::has_array($value)) {
 				try {
 					$this->preparedData[$key] = $this->prepareArray($value);
 				} catch (Exception $e) {
@@ -148,7 +165,7 @@ class WordGenerator {
 		if (($offset && $length%2!=0) || (!$offset && $length%2==0)) $length++;
 		for ($i=0; $i<$length; $i++) {
 			$isVowel = (($i+$offset)%2 == 0);
-			if ($isVowel && !rand(0, 5) && !$strict) continue;
+			if ($isVowel && !rand(0, 5) && !$strict && $length > 4) continue;
 			$letters = $isVowel ? $this->preparedData["letters"]["vowels"]
 				: $this->preparedData["letters"]["consonants"];
 			$word .= $letters[rand(0, count($letters)-1)];
