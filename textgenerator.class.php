@@ -1,36 +1,51 @@
 <?php
 
-/*
- * @author	Levan Velijanashvili <stichoza@gmail.com>
- * @version	2.1.15
- *
- */
+/**
+* TextGenerator
+*
+* Generate georgian words and sentences
+*
+* @author		Levan Velijanashvili <stichoza@gmail.com>
+* @link			http://stichoza.com/
+* @copyright	2013 Stichoza
+* @license		http://www.opensource.org/licenses/mit-license.php MIT
+* @version		2.1.26
+*/
 
 class TextGenerator {
 
-	/*
-	 *	Probability of certain functionalities
-	 *	Large number = less probability
-	 *	n	- 1/n+1
-	 *	0	- 1
-	 *	1	- 1/2
-	 *	inf	- 1/inf
-	 */
+	/**
+	* Probability of certain functionalities
+	* Large number = less probability
+	* n	- 1/n+1
+	* 0	- 1
+	* 1	- 1/2
+	* inf	- 1/inf
+	* 
+	* @access	private
+	*/
 	private $probability = array(
 		"punctuation" =>	5,
 		"prefixes" =>		4,
 		"suffixes" =>		6,
+		"letter_skip" =>	8,
 	);
 
-	/*
-	 *	Array of processed chars
-	 */
+
+	/**
+	* Array of processed chars
+	* 
+	* @access	private
+	*/
 	private $preparedData = array();
 
-	/*
-	 *	Basic array of characters
-	 *	This array is deleted at the end of construction
-	 */
+
+	/**
+	* Basic array of characters
+	* This array is deleted at the end of construction
+	* 
+	* @access	private
+	*/
 	private $characterBase = array(
 		"punctuation" => array(
 			"middle" => array(
@@ -90,10 +105,12 @@ class TextGenerator {
 		)
 	);
 
-	/*
-	 * @param null
-	 *
-	 */
+
+	/**
+	* Class constructor
+	* 
+	* @access	public
+	*/
 	public function __construct() {
 		try {
 			$this->prepareData($this->characterBase);
@@ -103,11 +120,16 @@ class TextGenerator {
 		unset($this->characterBase);
 	}
 
-	/*
-	 * @param array
-	 * @return void
-	 *
-	 */
+
+	/**
+	* Prepare characterBase[] and push to preparedArray[]
+	* 
+	* @access	private
+	* @param	array	$array	Array to iterate
+	* @return	void
+	* @throws
+	*
+	*/
 	private function prepareData($array) {
 		foreach ($array as $key => $value) {
 			if (is_array($value) && !TextGenerator::has_array($value)) {
@@ -130,11 +152,13 @@ class TextGenerator {
 		}
 	}
 
-	/*
-	 * @param array
-	 * @return array
-	 *
-	 */
+
+	/**
+	* Return prepared array (keys multiplied by it's priority value)
+	* 
+	* @param	array	$array	Array to prepare
+	* @return	array	Prepared array
+	*/
 	private function prepareArray($array) {
 		if (!is_array($array)) {
 			throw new Exception('Expected array.');
@@ -153,19 +177,24 @@ class TextGenerator {
 		return $preparedArray;
 	}
 
-	/*
-	 * @param int
-	 * @param boolean
-	 * @return string
-	 *
-	 */
+
+	/**
+	* Generate random word
+	*
+	* @param	integer	$length	Word length
+	* @param	boolean	$pre	Use prefixes
+	* @param	boolean	$suf	Use suffixes
+	* @param	boolean	$strict	Generate in strict mode (no length incrementing)
+	* @return	string	Generated word
+	*/
 	public function generateWord($length, $pre = true, $suf = true, $strict = false) {
 		$word = "";
 		$offset = ($strict) ? 0 : rand(0, 1);
 		if (($offset && $length%2!=0) || (!$offset && $length%2==0)) $length++;
 		for ($i=0; $i<$length; $i++) {
 			$isVowel = (($i+$offset)%2 == 0);
-			if ($isVowel && !rand(0, 5) && !$strict && $length > 4) continue;
+			if ($isVowel && !rand(0, $this->probability["letter_skip"]) && !$strict && $length > 4)
+				continue;
 			$letters = $isVowel ? $this->preparedData["letters"]["vowels"]
 				: $this->preparedData["letters"]["consonants"];
 			$word .= $letters[rand(0, count($letters)-1)];
@@ -179,11 +208,15 @@ class TextGenerator {
 		return $word;
 	}
 
-	/*
-	 * @param int
-	 * @return string
-	 *
-	 */
+
+	/**
+	* Generate sentence, string containig random words
+	*
+	* @param	integer	$n		Number of words in sentence
+	* @param	boolean	$pre	Use prefixes
+	* @param	boolean	$suf	Use suffixes
+	* @return	string	Generated sentence
+	*/
 	public function generateSentence($n, $pre, $suf) {
 		$sentence = "";
 		for ($i=0; $i<$n; $i++) {
@@ -201,11 +234,13 @@ class TextGenerator {
 		return $sentence;
 	}
 
-	/*
-	 * @param array
-	 * @return boolean
-	 *
-	 */
+
+	/**
+	* Check if array is multidimensional
+	*
+	* @param	array	$a	Array to chech for sub-arrays
+	* @return	boolean	If the array is multidimensional
+	*/
 	public static function has_array($a) {
 		foreach ($a as $v) {
 			if (is_array($v)) return true;
