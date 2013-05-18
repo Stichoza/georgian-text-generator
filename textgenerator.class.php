@@ -1,29 +1,30 @@
 <?php
 
 /**
-* TextGenerator
-*
-* Generate georgian words and sentences
-*
-* @author		Levan Velijanashvili <stichoza@gmail.com>
-* @link			http://stichoza.com/
-* @copyright	2013 Stichoza
-* @license		http://www.opensource.org/licenses/mit-license.php MIT
-* @version		2.1.26
-*/
-
+ * TextGenerator
+ *
+ * Generate georgian words and sentences
+ *
+ * @package     none
+ * @author		Levan Velijanashvili <stichoza@gmail.com>
+ * @link		http://stichoza.com/
+ * @copyright	2013 Stichoza
+ * @license		http://www.opensource.org/licenses/mit-license.php MIT
+ * @version		2.1.26
+ * @access      public
+ */
 class TextGenerator {
 
 	/**
-	* Probability of certain functionalities
-	* Large number = less probability
-	* n	- 1/n+1
-	* 0	- 1
-	* 1	- 1/2
-	* inf	- 1/inf
-	* 
-	* @access	private
-	*/
+	 * Probability of certain functionalities
+	 * Large number - less probability
+	 * n	- 1/n+1
+	 * 0	- 1
+	 * 1	- 1/2
+	 * inf	- 1/inf
+	 * 
+	 * @access	private
+	 */
 	private $probability = array(
 		"punctuation" =>	5,
 		"prefixes" =>		4,
@@ -31,21 +32,21 @@ class TextGenerator {
 		"letter_skip" =>	8,
 	);
 
-
-	/**
-	* Array of processed chars
-	* 
-	* @access	private
-	*/
+    /**
+	 * Array of processed chars
+	 * 
+	 * @access	private
+	 */
 	private $preparedData = array();
 
-
 	/**
-	* Basic array of characters
-	* This array is deleted at the end of construction
-	* 
-	* @access	private
-	*/
+	 * Basic array of characters
+     * 
+     * Large number - hight priority
+	 * This array is deleted at the end of construction
+	 * 
+	 * @access	private
+	 */
 	private $characterBase = array(
 		"punctuation" => array(
 			"middle" => array(
@@ -105,12 +106,11 @@ class TextGenerator {
 		)
 	);
 
-
 	/**
-	* Class constructor
-	* 
-	* @access	public
-	*/
+	 * Class constructor
+	 * 
+	 * @access	public
+	 */
 	public function __construct() {
 		try {
 			$this->prepareData($this->characterBase);
@@ -120,16 +120,15 @@ class TextGenerator {
 		unset($this->characterBase);
 	}
 
-
 	/**
-	* Prepare characterBase[] and push to preparedArray[]
-	* 
-	* @access	private
-	* @param	array	$array	Array to iterate
-	* @return	void
-	* @throws
-	*
-	*/
+	 * Prepare characterBase[] and push to preparedArray[]
+	 * 
+	 * @access	private
+	 * @param	array	$array	Array to iterate
+	 * @return	void
+	 * @throws
+	 *
+	 */
 	private function prepareData($array) {
 		foreach ($array as $key => $value) {
 			if (is_array($value) && !TextGenerator::has_array($value)) {
@@ -152,13 +151,12 @@ class TextGenerator {
 		}
 	}
 
-
 	/**
-	* Return prepared array (keys multiplied by it's priority value)
-	* 
-	* @param	array	$array	Array to prepare
-	* @return	array	Prepared array
-	*/
+	 * Return prepared array (keys multiplied by it's priority value)
+	 * 
+	 * @param	array	$array	Array to prepare
+	 * @return	array	Prepared array
+	 */
 	private function prepareArray($array) {
 		if (!is_array($array)) {
 			throw new Exception('Expected array.');
@@ -177,16 +175,15 @@ class TextGenerator {
 		return $preparedArray;
 	}
 
-
 	/**
-	* Generate random word
-	*
-	* @param	integer	$length	Word length
-	* @param	boolean	$pre	Use prefixes
-	* @param	boolean	$suf	Use suffixes
-	* @param	boolean	$strict	Generate in strict mode (no length incrementing)
-	* @return	string	Generated word
-	*/
+	 * Generate random word
+	 *
+	 * @param	integer	$length	Word length
+	 * @param	boolean	$pre	Use prefixes
+	 * @param	boolean	$suf	Use suffixes
+	 * @param	boolean	$strict	Generate in strict mode (no length incrementing)
+	 * @return	string	Generated word
+	 */
 	public function generateWord($length, $pre = true, $suf = true, $strict = false) {
 		$word = "";
 		$offset = ($strict) ? 0 : rand(0, 1);
@@ -208,15 +205,14 @@ class TextGenerator {
 		return $word;
 	}
 
-
 	/**
-	* Generate sentence, string containig random words
-	*
-	* @param	integer	$n		Number of words in sentence
-	* @param	boolean	$pre	Use prefixes
-	* @param	boolean	$suf	Use suffixes
-	* @return	string	Generated sentence
-	*/
+	 * Generate sentence, string containig random words
+	 *
+	 * @param	integer	$n		Number of words in sentence
+	 * @param	boolean	$pre	Use prefixes
+	 * @param	boolean	$suf	Use suffixes
+	 * @return	string	Generated sentence
+	 */
 	public function generateSentence($n, $pre, $suf) {
 		$sentence = "";
 		for ($i=0; $i<$n; $i++) {
@@ -234,13 +230,13 @@ class TextGenerator {
 		return $sentence;
 	}
 
-
 	/**
-	* Check if array is multidimensional
-	*
-	* @param	array	$a	Array to chech for sub-arrays
-	* @return	boolean	If the array is multidimensional
-	*/
+	 * Check if array is multidimensional
+	 *
+     * @static
+	 * @param	array	$a	Array to chech for sub-arrays
+	 * @return	boolean	If the array is multidimensional
+	 */
 	public static function has_array($a) {
 		foreach ($a as $v) {
 			if (is_array($v)) return true;
