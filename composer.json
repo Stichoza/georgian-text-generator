@@ -1,0 +1,29 @@
+{
+    "name": "stichoza/georgian-text-generator",
+    "description": "Generate Georgian words and sentences",
+    "keywords": ["georgian", "text", "generator"],
+    "license": "MIT",
+    "homepage": "http://github.com/Stichoza/georgian-text-generator",
+    "authors": [
+        {
+            "name": "Levan Velijanashvili",
+            "email": "me@stichoza.com"
+        }
+    ],
+    "require": {
+        "php": "^7.1"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^7.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Stichoza\\GeorgianTextGenerator\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Stichoza\\GeorgianTextGenerator\\Tests\\": "tests/"
+        }
+    }
+}
